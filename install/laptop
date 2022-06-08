@@ -82,16 +82,20 @@ brew "youtube-dl"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
+cask "1password"
+cask "1password-cli"
 cask "iterm2"
 cask "google-chrome"
 cask "google-cloud-sdk"
 cask "spotify"
 cask "vlc"
 cask "visual-studio-code"
+cask "slack"
+cask "libreoffice"
 EOF
 
 
-echo_ok "Installing VS Code Extensions..."
+laptop_echo "Installing VS Code Extensions..."
 
 VSCODE_EXTENSIONS=(
 	betterthantomorrow.calva
@@ -101,7 +105,7 @@ VSCODE_EXTENSIONS=(
 )
 
 if hash code &>/dev/null; then
-	echo_ok "Installing VS Code extensions..."
+	laptop_echo "Installing VS Code extensions..."
 	for i in "${VSCODE_EXTENSIONS[@]}"; do
 		code --install-extension "$i"
 	done
