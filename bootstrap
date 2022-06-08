@@ -285,23 +285,9 @@ cp "${BOOTSTRAP_DIR}/lib/default.yml" "${HOME}/.tmuxinator/"
 bootstrap_echo "Done!"
 
 
-################################################################################
-# 6. Install Ukrainian language utilities
-#
-# Reference:
-# * http://apple.stackexchange.com/a/11842/75491
-# * http://extensions.services.openoffice.org/en/project/ukrainian-dictionary
-################################################################################
-
-bootstrap_echo "Step 6: Installing Ukrainian language utilities..."
-
-cp "$BOOTSTRAP_DIR"/lib/{hyph_uk.dic,uk_UA.aff,uk_UA.dic} "$DICTIONARY_DIR"
-
-bootstrap_echo "Done!"
-
 
 ################################################################################
-# 7. Setup dotfiles (http://jsua.co/dotfiles)
+# 6. Setup dotfiles (http://jsua.co/dotfiles)
 ################################################################################
 
 bootstrap_echo "Step 7: Installing dotfiles..."
@@ -330,7 +316,6 @@ echo "**********************************************************************"
 echo "****                                                              ****"
 echo "**** Mac Bootstrap script complete! Please restart your computer. ****"
 echo "****                                                              ****"
-echo "****                    https://jsua.co/macos                     ****"
 echo "****                                                              ****"
 echo "**********************************************************************"
 echo "**********************************************************************"
