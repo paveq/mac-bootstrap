@@ -79,20 +79,16 @@ brew bundle --file=- <<EOF
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/core"
-tap "homebrew/services"
 
 # Need to install openssl before libyaml
 brew "openssl"
-brew "openssl@1.1" # wget dependency
 
 brew "awscli"
 brew "jq"
 brew "ssh-copy-id"
 brew "tmux"
 brew "tree"
-brew "wget"
 brew "youtube-dl"
 
 # homebrew-cask
