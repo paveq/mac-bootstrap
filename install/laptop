@@ -84,7 +84,7 @@ brew "youtube-dl"
 # https://github.com/caskroom/homebrew-cask
 cask "1password"
 cask "1password-cli"
-cask "iterm2"
+cask "alacritty"
 cask "google-chrome"
 cask "google-cloud-sdk"
 cask "spotify"
