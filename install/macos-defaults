@@ -139,8 +139,6 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 25
 #defaults write NSGlobalDomain AppleMeasurementUnits -string "Inches"
 #defaults write NSGlobalDomain AppleMetricUnits -bool true
 
-# Set the timezone; see `systemsetup -listtimezones` for other values
-#systemsetup -settimezone "$TIME_ZONE" > /dev/null
 
 # Disable auto-correct
 # defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
