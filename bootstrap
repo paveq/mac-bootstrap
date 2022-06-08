@@ -47,8 +47,6 @@ fi
 DEFAULT_BOOTSTRAP_VERSION="master"
 DEFAULT_DOTFILES_BRANCH="master"
 DEFAULT_TIME_ZONE="Europe/Helsinki"
-DEFAULT_NODEJS_VERSION="12.18.3"
-DEFAULT_RUBY_VERSION="2.7.1"
 
 
 ################################################################################
@@ -100,7 +98,6 @@ echo "*************************************************************************"
 echo "*******                                                           *******"
 echo "*******                 Welcome to Mac Bootstrap!                 *******"
 echo "*******                                                           *******"
-echo "*******                   https://jsua.co/macos                   *******"
 echo "*******                                                           *******"
 echo "*************************************************************************"
 echo
@@ -141,35 +138,6 @@ To view available options run \`sudo systemsetup -listtimezones\`
 read -r -p "> " TIME_ZONE
 export TIME_ZONE=${TIME_ZONE:-$DEFAULT_TIME_ZONE}
 
-printf "\\nWhich version of Node.js would you like to install?
-Available versions: https://semver.io/node/versions
-(Leave blank for default: %s)\\n" "$DEFAULT_NODEJS_VERSION"
-read -r -p "> " ASDF_NODEJS_VERSION
-export ASDF_NODEJS_VERSION=${ASDF_NODEJS_VERSION:-$DEFAULT_NODEJS_VERSION}
-
-printf "\\nWhich version of Ruby would you like to install?
-Available versions: https://raw.githubusercontent.com/postmodern/ruby-versions/master/ruby/versions.txt
-(Leave blank for default: %s)\\n" "$DEFAULT_RUBY_VERSION"
-read -r -p "> " ASDF_RUBY_VERSION
-export ASDF_RUBY_VERSION=${ASDF_RUBY_VERSION:-$DEFAULT_RUBY_VERSION}
-
-printf "\\nPlease select a default shell.\\n"
-select my_shell in fish zsh
-do
-  case $my_shell in
-    fish)
-      export DEFAULT_SHELL="fish"
-      break
-      ;;
-    zsh)
-      export DEFAULT_SHELL="zsh"
-      break
-      ;;
-    *)
-      echo "Please enter 1 for fish or 2 for zsh."
-      ;;
-  esac
-done
 
 printf "\\nLooks good. Here's what we've got so far.\\n"
 printf "Bootstrap version: ==> [%s]\\n" "$BOOTSTRAP_VERSION"
@@ -177,9 +145,6 @@ printf "Dotfiles branch:   ==> [%s]\\n" "$DOTFILES_BRANCH"
 printf "Computer name:     ==> [%s]\\n" "$COMPUTER_NAME"
 printf "Host name:         ==> [%s]\\n" "$HOST_NAME"
 printf "Time zone:         ==> [%s]\\n" "$TIME_ZONE"
-printf "Node.js version:   ==> [%s]\\n" "$ASDF_NODEJS_VERSION"
-printf "Ruby version:      ==> [%s]\\n" "$ASDF_RUBY_VERSION"
-printf "Default shell:     ==> [%s]\\n" "$DEFAULT_SHELL"
 
 echo
 read -p "Continue? (y/n) " -n 1 -r
@@ -218,29 +183,26 @@ bootstrap_echo "Done!"
 # 2. Install Oh My Zsh
 ################################################################################
 
-if [ "$DEFAULT_SHELL" == "zsh" ]; then
-  bootstrap_echo "Step 2: Installing Oh My Zsh..."
+bootstrap_echo "Step 2: Installing Oh My Zsh..."
 
-  if [ -d "${HOME}/.oh-my-zsh" ]; then
-    rm -rf "${HOME}/.oh-my-zsh"
-  fi
-
-  git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
-
-  if [ -d /usr/local/share/zsh ]; then
-    bootstrap_echo "Setting permissions for /usr/local/share/zsh..."
-    sudo chmod -R 755 /usr/local/share/zsh
-  fi
-
-  if [ -d /usr/local/share/zsh/site-functions ]; then
-    bootstrap_echo "Setting permissions for /usr/local/share/zsh/site-functions..."
-    sudo chmod -R 755 /usr/local/share/zsh/site-functions
-  fi
-
-  bootstrap_echo "Done!"
-else
-  bootstrap_echo "Step 2: Zsh not selected. Skipping Oh My Zsh installation."
+if [ -d "${HOME}/.oh-my-zsh" ]; then
+  rm -rf "${HOME}/.oh-my-zsh"
 fi
+
+git clone https://github.com/robbyrussell/oh-my-zsh.git "${HOME}/.oh-my-zsh"
+
+if [ -d /usr/local/share/zsh ]; then
+  bootstrap_echo "Setting permissions for /usr/local/share/zsh..."
+  sudo chmod -R 755 /usr/local/share/zsh
+fi
+
+if [ -d /usr/local/share/zsh/site-functions ]; then
+  bootstrap_echo "Setting permissions for /usr/local/share/zsh/site-functions..."
+  sudo chmod -R 755 /usr/local/share/zsh/site-functions
+fi
+
+bootstrap_echo "Done!"
+
 
 
 ################################################################################
