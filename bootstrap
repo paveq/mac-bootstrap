@@ -28,7 +28,7 @@ export OLD_DOTFILES_BAK="${HOME}/old_dotfiles_bak"
 export DICTIONARY_DIR="${HOME}/Library/Spelling"
 export DOTFILES_REPO_URL="https://github.com/joshukraine/dotfiles.git"
 export DOTFILES_DIR="${HOME}/dotfiles"
-export BOOTSTRAP_REPO_URL="https://github.com/joshukraine/mac-bootstrap.git"
+export BOOTSTRAP_REPO_URL="https://github.com/paveq/mac-bootstrap.git"
 export BOOTSTRAP_DIR="${HOME}/mac-bootstrap"
 
 PS3="> "
