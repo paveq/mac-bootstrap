@@ -10,6 +10,25 @@ laptop_echo() {
   printf "\\n[LAPTOP] $fmt\\n" "$@"
 }
 
+append_to_zshrc() {
+  local text="$1" zshrc
+  local skip_new_line="${2:-0}"
+
+  if [ -w "$HOME/.zshrc.local" ]; then
+    zshrc="$HOME/.zshrc.local"
+  else
+    zshrc="$HOME/.zshrc"
+  fi
+
+  if ! grep -Fqs "$text" "$zshrc"; then
+    if [ "$skip_new_line" -eq 1 ]; then
+      printf "%s\\n" "$text" >> "$zshrc"
+    else
+      printf "\\n%s\\n" "$text" >> "$zshrc"
+    fi
+  fi
+}
+
 # shellcheck disable=SC2154
 trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 
@@ -19,59 +38,40 @@ if [ ! -d "${HOME}/bin/" ]; then
   mkdir "${HOME}/bin"
 fi
 
-HOMEBREW_PREFIX="/usr/local"
-
-if [ -d "$HOMEBREW_PREFIX" ]; then
-  if ! [ -r "$HOMEBREW_PREFIX" ]; then
-    sudo chown -R "${LOGNAME}:admin" /usr/local
-  fi
-else
-  sudo mkdir "$HOMEBREW_PREFIX"
-  sudo chflags norestricted "$HOMEBREW_PREFIX"
-  sudo chown -R "${LOGNAME}:admin" "$HOMEBREW_PREFIX"
+if [ ! -f "$HOME/.zshrc" ]; then
+  touch "$HOME/.zshrc"
 fi
 
-update_fish_shell() {
-  local shell_path;
-  shell_path="$(command -v fish)"
+# shellcheck disable=SC2016
+append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
 
-  laptop_echo "Changing your shell to fish ..."
-  if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
-    laptop_echo "Adding '${shell_path}' to /etc/shells"
-    echo "$shell_path" | sudo tee -a /etc/shells
-  fi
-  sudo chsh -s "$shell_path" "$USER"
-}
-
-update_zsh_shell() {
-  local shell_path;
-  shell_path="$(command -v zsh)"
-
-  laptop_echo "Changing your shell to zsh ..."
-  if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
-    laptop_echo "Adding '${shell_path}' to /etc/shells"
-    sudo sh -c "echo ${shell_path} >> /etc/shells"
-  fi
-  sudo chsh -s "$shell_path" "$USER"
-}
-
+# Determine Homebrew prefix
+arch="$(uname -m)"
+if [ "$arch" = "arm64" ]; then
+  HOMEBREW_PREFIX="/opt/homebrew"
+else
+  HOMEBREW_PREFIX="/usr/local"
+fi
 
 if ! command -v brew >/dev/null; then
   laptop_echo "Installing Homebrew ..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  append_to_zshrc "eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+
+  export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 fi
 
 
 laptop_echo "Updating Homebrew formulae ..."
 brew update --force # https://github.com/Homebrew/brew/issues/1151
 brew bundle --file=- <<EOF
-tap "homebrew/bundle"
+tap "homebrew/core"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
-tap "homebrew/core"
 
 # Need to install openssl before libyaml
-brew "openssl"
+#brew "openssl"
 
 brew "awscli"
 brew "jq"
@@ -90,20 +90,6 @@ cask "vlc"
 cask "visual-studio-code"
 EOF
 
-case "$DEFAULT_SHELL" in
-  fish)
-    laptop_echo "Your shell preference is set to FISH..."
-    update_fish_shell
-    ;;
-  zsh)
-    laptop_echo "Your shell preference is set to ZSH..."
-    update_zsh_shell
-    ;;
-  *)
-    laptop_echo "No shell preference detected. Using FISH..."
-    update_fish_shell
-    ;;
-esac
 
 echo_ok "Installing VS Code Extensions..."
 
