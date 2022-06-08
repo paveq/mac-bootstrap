@@ -82,87 +82,27 @@ tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
-tap "puma/puma"
-tap "universal-ctags/universal-ctags"
 
 # Need to install openssl before libyaml
 brew "openssl"
 brew "openssl@1.1" # wget dependency
 
-brew "advancecomp"
-brew "ansible"
-brew "asciidoctor"
-brew "autoconf" # asdf dependency
-brew "automake" # asdf dependency
 brew "awscli"
-brew "bash"
-brew "bash-completion"
-brew "bat"
-brew "cloc"
-brew "cmake"
-brew "coreutils"
-brew "diff-so-fancy"
-brew "dos2unix"
-brew "exa"
-brew "fish"
-brew "fontforge"
-brew "fzf"
-brew "gifsicle"
-brew "git"
-brew "git-quick-stats"
-brew "gmp" # Vim dependency
-brew "gnupg" # asdf-nodejs dependency
-brew "highlight"
-brew "htop"
-brew "httpie"
-brew "imagemagick"
-brew "jhead"
 brew "jq"
-brew "less"
-brew "libtermkey"
-brew "libtool" # asdf dependency
-brew "libxslt" # asdf dependency
-brew "libyaml" # asdf dependency
-brew "media-info"
-brew "memcached"
-brew "mono"
-brew "most"
-brew "multitail"
-brew "neovim", args: ["HEAD"]
-brew "onefetch"
-brew "overmind"
-brew "pandoc"
-brew "perl"
-brew "pgcli"
-brew "postgresql", restart_service: true
-brew "puma/puma/puma-dev"
-brew "python"
-brew "ranger", link: false
-brew "readline"
-brew "ripgrep"
-brew "rlwrap"
-brew "rsync"
-brew "shellcheck"
-brew "sqlite"
 brew "ssh-copy-id"
-brew "starship"
-brew "the_silver_searcher"
-brew "tldr"
 brew "tmux"
-brew "trash"
 brew "tree"
-brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
-brew "unixodbc" # asdf dependency
-brew "w3m"
 brew "wget"
-brew "xz"
-brew "zsh"
+brew "youtube-dl"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
-cask "font-fira-code-nerd-font"
-cask "alacritty"
-cask "iterm2-beta"
+cask "iterm2"
+cask "google-chrome"
+cask "google-cloud-sdk"
+cask "spotify"
+cask "vlc"
+cask "visual-studio-code"
 EOF
 
 case "$DEFAULT_SHELL" in
@@ -180,85 +120,20 @@ case "$DEFAULT_SHELL" in
     ;;
 esac
 
-laptop_echo "Configuring asdf version manager..."
-if [ ! -d "${HOME}/.asdf" ]; then
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.7
-else
-  "${HOME}/.asdf/bin/asdf" update
-  "${HOME}/.asdf/bin/asdf" plugin-update --all
-fi
+echo_ok "Installing VS Code Extensions..."
 
-install_asdf_plugin() {
-  local name="$1"
-  local url="$2"
+VSCODE_EXTENSIONS=(
+	betterthantomorrow.calva
+  2gua.rainbow-brackets
+  heptio.jsonnet
+  borkdude.clj-kondo
+)
 
-  if ! asdf plugin-list | grep -Fq "$name"; then
-    asdf plugin-add "$name" "$url"
-  fi
-}
-
-# shellcheck disable=SC1090
-source "${HOME}/.asdf/asdf.sh"
-install_asdf_plugin "ruby" "https://github.com/asdf-vm/asdf-ruby.git"
-install_asdf_plugin "nodejs" "https://github.com/asdf-vm/asdf-nodejs.git"
-
-install_asdf_language() {
-  local language="$1"
-  local version="$2"
-  asdf install "$language" "$version"
-  asdf global "$language" "$version"
-}
-
-laptop_echo "Installing Ruby..."
-install_asdf_language "ruby" "$ASDF_RUBY_VERSION"
-laptop_echo "Checking which Ruby and Gem installs we are using at this point..."
-echo "Ruby --> $(command -v ruby)"
-ruby -v
-echo "Gem --> $(command -v gem)"
-gem -v
-gem update --system
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
-
-laptop_echo "Installing default gems..."
-gem install bundler
-gem install haml_lint
-gem install neovim
-gem install pry
-gem install rubocop
-gem install tmuxinator
-gem install solargraph
-
-laptop_echo "Installing Node..."
-bash "${HOME}/.asdf/plugins/nodejs/bin/import-release-team-keyring"
-install_asdf_language "nodejs" "$ASDF_NODEJS_VERSION"
-echo "Node --> $(command -v node)"
-node -v
-echo "NPM --> $(command -v npm)"
-npm -v
-
-laptop_echo "Installing default npm packages..."
-npm install -g @vue/cli
-npm install -g gulp-cli
-npm install -g http-server
-npm install -g neovim
-npm install -g pug
-npm install -g stylelint
-npm install -g typescript
-npm install -g vue-language-server
-
-laptop_echo "Installing Python support for Neovim..."
-echo "Python 3 --> $(command -v python3)"
-python3 --version
-echo "Python 2 --> $(command -v python)"
-python --version
-sudo easy_install pip
-python3 -m pip install --user --upgrade pynvim
-python2 -m pip install --user --upgrade pynvim
-
-if [ ! -d "${HOME}/.yarn" ]; then
-  laptop_echo "Installing Yarn..."
-  curl -o- -L https://yarnpkg.com/install.sh | bash
+if hash code &>/dev/null; then
+	echo_ok "Installing VS Code extensions..."
+	for i in "${VSCODE_EXTENSIONS[@]}"; do
+		code --install-extension "$i"
+	done
 fi
 
 laptop_echo "Laptop installation completed successfully!"
