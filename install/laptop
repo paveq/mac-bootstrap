@@ -79,6 +79,7 @@ brew "ssh-copy-id"
 brew "tmux"
 brew "tree"
 brew "youtube-dl"
+brew "mas"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
@@ -92,13 +93,26 @@ cask "vlc"
 cask "visual-studio-code"
 cask "slack"
 cask "libreoffice"
+cask "scroll-reverser"
 EOF
+
+
+MAS_INSTALL=(
+  1451685025 # wireguard
+)
+
+if hash mas &>/dev/null; then
+	laptop_echo "Installing app store applications..."
+	for i in "${MAS_INSTALL[@]}"; do
+		mas install "$i"
+	done
+fi
 
 
 laptop_echo "Installing VS Code Extensions..."
 
 VSCODE_EXTENSIONS=(
-	betterthantomorrow.calva
+  betterthantomorrow.calva
   2gua.rainbow-brackets
   heptio.jsonnet
   borkdude.clj-kondo
