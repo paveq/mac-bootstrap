@@ -73,6 +73,7 @@ tap "homebrew/cask-fonts"
 # Need to install openssl before libyaml
 #brew "openssl"
 
+brew "go"
 brew "awscli"
 brew "jq"
 brew "ssh-copy-id"
@@ -80,6 +81,9 @@ brew "tmux"
 brew "tree"
 brew "youtube-dl"
 brew "mas"
+brew "kubectl"
+brew "kubectx"
+brew "kube-ps1"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
@@ -95,6 +99,8 @@ cask "slack"
 cask "libreoffice"
 cask "scroll-reverser"
 EOF
+
+append_to_zshrc "export PATH=\$PATH:\$(go env GOPATH)/bin"
 
 
 MAS_INSTALL=(
