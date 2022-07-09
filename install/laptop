@@ -82,8 +82,12 @@ brew "tree"
 brew "youtube-dl"
 brew "mas"
 brew "kubectl"
+brew "krew"
 brew "kubectx"
 brew "kube-ps1"
+brew "helm"
+brew "argocd"
+brew "argocd-vault-plugin"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
