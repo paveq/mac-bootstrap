@@ -69,10 +69,12 @@ brew bundle --file=- <<EOF
 tap "homebrew/core"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
-
+tap "siderolabs/talos"
+"
 # Need to install openssl before libyaml
 #brew "openssl"
 
+brew "coreutils"
 brew "go"
 brew "awscli"
 brew "jq"
@@ -88,9 +90,14 @@ brew "kube-ps1"
 brew "helm"
 brew "argocd"
 brew "argocd-vault-plugin"
+brew "stern"
+brew "wrk"
+
+brew "talosctl"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
+cask "notion"
 cask "1password"
 cask "1password-cli"
 cask "alacritty"
@@ -102,6 +109,7 @@ cask "visual-studio-code"
 cask "slack"
 cask "libreoffice"
 cask "scroll-reverser"
+cask "mqtt-explorer"
 EOF
 
 append_to_zshrc "export PATH=\$PATH:\$(go env GOPATH)/bin"
@@ -134,5 +142,8 @@ if hash code &>/dev/null; then
 		code --install-extension "$i"
 	done
 fi
+
+laptop_echo "Installing kubectl krew extensions..."
+kubectl krew install view-secret moco rook-ceph konfig
 
 laptop_echo "Laptop installation completed successfully!"
