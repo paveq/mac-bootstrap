@@ -74,15 +74,16 @@ tap "siderolabs/talos"
 # Need to install openssl before libyaml
 #brew "openssl"
 
-brew "coreutils"
 brew "go"
 brew "awscli"
 brew "jq"
-brew "ssh-copy-id"
-brew "tmux"
-brew "tree"
+brew "yq"
 brew "youtube-dl"
 brew "mas"
+brew "wrk"
+brew "just"
+
+# k8s ecosystem
 brew "kubectl"
 brew "krew"
 brew "kubectx"
@@ -91,12 +92,22 @@ brew "helm"
 brew "argocd"
 brew "argocd-vault-plugin"
 brew "stern"
-brew "wrk"
-
 brew "talosctl"
+
+# cli helpers
+brew "coreutils"
+brew "gnu-sed"
+brew "fzf"
+brew "ssh-copy-id"
+brew "tmux"
+brew "tree"
+
+# clojure ecosystem
+brew "clojure"
 
 # homebrew-cask
 # https://github.com/caskroom/homebrew-cask
+cask "miro"
 cask "notion"
 cask "1password"
 cask "1password-cli"
@@ -109,7 +120,6 @@ cask "visual-studio-code"
 cask "slack"
 cask "libreoffice"
 cask "scroll-reverser"
-cask "mqtt-explorer"
 EOF
 
 append_to_zshrc "export PATH=\$PATH:\$(go env GOPATH)/bin"
@@ -132,7 +142,6 @@ laptop_echo "Installing VS Code Extensions..."
 VSCODE_EXTENSIONS=(
   betterthantomorrow.calva
   2gua.rainbow-brackets
-  heptio.jsonnet
   borkdude.clj-kondo
 )
 
